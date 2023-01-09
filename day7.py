@@ -10,6 +10,10 @@ input_file = "C:/Users/daisy/OneDrive/Documents/advent_of_code/input_day7.txt"
 
 folder_dict = {}
 
+
+## will not work because some folders have same names within different folder structures. 
+## need to create dict of dicts
+
 with open(input_file) as f:
     for line in f:
         if line.startswith('$ cd '):
@@ -22,25 +26,29 @@ with open(input_file) as f:
             folder_dict[folder].append(line.strip('\n').rstrip(string.ascii_letters + string.punctuation).rstrip())
             
 
-sizes = {}
-
-for key in folder_dict.keys():
-    folder = folder_dict[key]
-    sizes[key] = 0
-
-    
-folder = folder_dict['qsmg']
-sizes['/'] = 0
 
 def sum_files(folder, folder_dict):
     size = 0
     for i in folder:
         if i.isnumeric():
-            print(i)
             size += int(i)
         else:
-            sum_files(folder_dict[i], folder_dict)
+            print(i)
+            size += sum_files(folder_dict[i], folder_dict)
     return size
 
-size = sum_files(folder, folder_dict)
 
+sizes = {}
+
+for key in folder_dict.keys():
+    size = sum_files(folder_dict[key], folder_dict)
+    sizes[key] = size
+
+total_low = 0
+
+# for key in sizes.keys():
+#     if sizes[key] <= 100000:
+#         print(key)
+#         print(sizes[key])
+#         total_low += sizes[key]
+#         print(total_low)
